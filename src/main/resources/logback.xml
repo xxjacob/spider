@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="DEBUGOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>%d [%thread] %-5level %logger{36} %line - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="com">
+		<level value="INFO" />
+		<appender-ref ref="DEBUGOUT" />
+	</logger>
+	<logger name="org">
+		<level value="INFO" />
+		<appender-ref ref="DEBUGOUT" />
+	</logger>
+</configuration>

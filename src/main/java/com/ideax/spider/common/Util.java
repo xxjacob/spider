@@ -1,5 +1,6 @@
 package com.ideax.spider.common;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -234,7 +235,7 @@ public class Util {
 		return null;
 	}
 
-	public static void download(String url, Map<String, String> header, String filename) {
+	public static boolean download(String url, Map<String, String> header, File file) {
 
 		HttpRequestBase get = null;
 		get = new HttpGet(url);
@@ -252,8 +253,9 @@ public class Util {
 				logger.error("ERROR : report app xml result , response error : status=[{}] , {}", resp.getStatusLine()
 						.getStatusCode(), str);
 			} else {
-				os =  new FileOutputStream(filename);
+				os =  new FileOutputStream(file);
 				IOUtils.copy(resp.getEntity().getContent(), os);
+				return true;
 			}
 		} catch (ClientProtocolException e) {
 			logger.error("", e);
@@ -262,6 +264,7 @@ public class Util {
 		}finally{
 			IOUtils.closeQuietly(os);
 		}
+		return false;
 	}
 
 	public static void main(String[] args) throws Exception {

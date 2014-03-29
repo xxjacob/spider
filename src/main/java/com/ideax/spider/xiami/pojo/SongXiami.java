@@ -1,4 +1,4 @@
-package com.ideax.spider.xiami.poji;
+package com.ideax.spider.xiami.pojo;
 
 import java.util.List;
 import java.io.Serializable;
@@ -53,6 +53,7 @@ public class SongXiami implements Serializable{
 	/** xiami_lyricist **/
     private String xiamiLyricist;
     private String xiamiLyricUrl;
+    private String xiamiDownloadUrl;
 	public String getXiamiLyricUrl() {
 		return xiamiLyricUrl;
 	}
@@ -661,4 +662,10 @@ public class SongXiami implements Serializable{
 	public void setIds(List<Long> keys) {
 		this.keys = keys;
 	}
+    public String getXiamiDownloadUrl() {
+        return xiamiDownloadUrl;
+    }
+    public void setXiamiDownloadUrl(String xiamiDownloadUrl) {
+        this.xiamiDownloadUrl = xiamiDownloadUrl;
+    }
 }
