@@ -20,6 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -28,6 +29,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.config.SocketConfig;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -152,7 +154,7 @@ public class Util {
     /*
      * --------------
      */
-    private static CloseableHttpClient httpclient;
+    static CloseableHttpClient httpclient;
     static {
         httpclient = HttpClients
                 .custom()
@@ -165,7 +167,7 @@ public class Util {
                 .disableCookieManagement()
                 // .disableRedirectHandling()
                 // socket config, 10s read timeout
-                .setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(10000).build()).build();
+                .setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(600000).build()).build();
     }
 
     public static String getHttpResponseString(String url, Map<String, String> params) {
@@ -273,30 +275,35 @@ public class Util {
         return false;
     }
 
+    public static String upload(String url, File f, String filename, Map<String, String> header) {
+
+        HttpPost post = new HttpPost(url);
+        HttpEntity entity = MultipartEntityBuilder.create().addBinaryBody(filename, f).build();
+        post.setEntity(entity);
+        if (header != null) {
+            for (Entry<String, String> en : header.entrySet()) {
+                post.setHeader(en.getKey(), en.getValue());
+            }
+        }
+        CloseableHttpResponse resp;
+        try {
+            resp = httpclient.execute(post);
+            if (!(resp.getStatusLine().getStatusCode() == 200)) {
+                String str = EntityUtils.toString(resp.getEntity(), "UTF-8");
+                logger.error("ERROR : report app xml result , response error : status=[{}] , {}", resp.getStatusLine()
+                        .getStatusCode(), str);
+                return null;
+            } else
+                return EntityUtils.toString(resp.getEntity(), "UTF-8");
+        } catch (ClientProtocolException e) {
+            logger.error("", e);
+        } catch (IOException e) {
+            logger.error("", e);
+        }
+        return null;
+    }
+
     public static void main(String[] args) throws Exception {
-        String openidStr = "callback( {\"client_id\":\"101033103\",\"openid\":\"9CA246F8643379AA102C5EA5263ED688\"} );";
-        int oi = openidStr.indexOf("\"openid\"");
-        if (oi < 0) {
-            logger.error("get openid error response:" + oi);
-        }
-        int start = openidStr.indexOf('"', oi + "\"openid\"".length());
-        if (start < 0) {
-            logger.error("get openid error response:" + start);
-        }
-        int end = openidStr.indexOf('"', start + 1);
-        if (end <= start) {
-            logger.error("get openid error response:" + oi + start + end);
-        }
-        System.out.println(openidStr.substring(start + 1, end));
-        // StringBuilder sb = new StringBuilder();
-        // sb.append("MBO").append('\n').append("Method=").append("GET").append('\n').append("Bucket=").append(bucket)
-        // .append('\n').append("Object=").append("/断桥残雪 - 许嵩.mp3").append('\n');
-        // String hmac = doSign(sb.toString(), SK);
-        // System.out.println(sb.toString());
-        // System.out.println(hmac);
-        //
-        // System.out.println(Util.genPcsUrl("GET", "fmstore", "断桥残雪 - 许嵩.mp3",
-        // 0));
     }
 
 }

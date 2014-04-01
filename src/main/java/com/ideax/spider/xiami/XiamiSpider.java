@@ -23,7 +23,6 @@ import com.baidu.inf.iis.bcs.BaiduBCS;
 import com.baidu.inf.iis.bcs.auth.BCSCredentials;
 import com.baidu.inf.iis.bcs.model.ObjectMetadata;
 import com.baidu.inf.iis.bcs.request.PutObjectRequest;
-import com.baidu.inf.iis.bcs.response.BaiduBCSResponse;
 import com.ideax.spider.common.Util;
 import com.ideax.spider.xiami.pojo.SongXiami;
 
@@ -237,8 +236,7 @@ public class XiamiSpider {
                                     try {
                                         song.setDuration(Integer.parseInt(track.element("length").getText()));
                                     } catch (Exception e) {
-                                        logger.error("no duration..." + mp3XmlStr);
-                                        continue;
+                                        logger.warn("no duration..." + mp3XmlStr);
                                     }
 
                                     String surl = track.element("location").getTextTrim();
@@ -315,7 +313,7 @@ public class XiamiSpider {
         ObjectMetadata metadata = new ObjectMetadata();
         // metadata.setContentType("text/html");
         request.setMetadata(metadata);
-        BaiduBCSResponse<ObjectMetadata> response = baiduBCS.putObject(request);
+        baiduBCS.putObject(request);
 
     }
 
