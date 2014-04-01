@@ -51,10 +51,13 @@ public class XiamiSpider {
         mp3headers
                 .put("Cookie",
                         "_unsign_token=04570114b0dbb7421c061588a62dabf3; __gads=ID=3d44fac221bb2403:T=1389614076:S=ALNI_MZdNR1gmMpQebOFw-Ma2bV4dnNwzQ; ab=0; member_auth=0jqbT4gZvmhv0KSSTIk0dicYt%2BzTHDSEkYoD3bR85AF1IIoANoTwlKuQRA1P3CSVkY2RtGsATg; user=1667446%22%E5%BE%90%E6%AC%A3%22images%2Favatar_new%2F33%2F34%2F1667446%2F1667446_1305879917_1.jpg%220%222789%22%3Ca+href%3D%27%2Fwebsitehelp%23help9_3%27+%3Ela%3C%2Fa%3E%220%2224%228173%22922d26080f%221394870464; player_opencount=0; xiami_playlist_for_hao123=3381901%2C1771979714%2C1770986640%2C1771627825%2C1771889373%2C1770153579%2C1768995853%2C1771949597%2C1772130321%2C1769274193%2C180264%2C2079853%2C146898%2C17302%2C2079912%2C2124065%2C2138604%2C1771734083%2C174652%2C76280%2C1768944774%2C1771760408%2C137794%2C9910%2C1769271562%2C1770454888%2C2077237%2C383794%2C1771638197%2C1772001102%2C1769819214%2C1771829247%2C1769962750%2C165990%2C382776%2C1770752283%2C; t_sign_auth=1; auth_key=Y2ZkODViN2QyMDU2ZGRhZWRhYzFiMWVlNjU0NzFiMzctLzM1Mi8yMzM1Mi8xNjgwODkvMjA3Mzg0MV8yMDcxODc1X2wubXAzLTEzOTYxMzc2MDAtMC1udWxs; __utma=251084815.1212903984.1389614024.1396068663.1396074179.53; __utmb=251084815.3.10.1396074180; __utmc=251084815; __utmz=251084815.1395897757.48.16.utmcsr=360.fm|utmccn=(referral)|utmcmd=referral|utmcct=/; _xiamitoken=3216f18932e945795bcb9432cd73e95c");
-        mp3headers.put("Referer", "http://www.xiami.com/play?ids=/song/playlist/id/2073841/object_name/default/object_id/0");
-        mp3headers.put("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36");
+        mp3headers.put("Referer",
+                "http://www.xiami.com/play?ids=/song/playlist/id/2073841/object_name/default/object_id/0");
+        mp3headers
+                .put("User-Agent",
+                        "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36");
     }
-    
+
     public static Map<String, String> downloadheaders = new HashMap<String, String>();
     static {
         downloadheaders.put("Accept-Encoding", "gzip,deflate,sdch");
@@ -66,8 +69,12 @@ public class XiamiSpider {
         downloadheaders
                 .put("Cookie",
                         "_unsign_token=04570114b0dbb7421c061588a62dabf3; bdshare_firstime=1389614046560; __gads=ID=3d44fac221bb2403:T=1389614076:S=ALNI_MZdNR1gmMpQebOFw-Ma2bV4dnNwzQ; Hm_lvt_3d143f0a07b6487f65609d8411e5464f=1393057948,1393253732,1393303827,1393335532; ab=0; member_auth=0jqbT4gZvmhv0KSSTIk0dicYt%2BzTHDSEkYoD3bR85AF1IIoANoTwlKuQRA1P3CSVkY2RtGsATg; user=1667446%22%E5%BE%90%E6%AC%A3%22images%2Favatar_new%2F33%2F34%2F1667446%2F1667446_1305879917_1.jpg%220%222789%22%3Ca+href%3D%27%2Fwebsitehelp%23help9_3%27+%3Ela%3C%2Fa%3E%220%2224%228173%22922d26080f%221394870464; ahtena_is_show=false; seiya_time=1395467190359%7C1395658904950; player_opencount=0; xiami_playlist_for_hao123=3381901%2C1771979714%2C1770986640%2C1771627825%2C1771889373%2C1770153579%2C1768995853%2C1771949597%2C1772130321%2C1769274193%2C180264%2C2079853%2C146898%2C17302%2C2079912%2C2124065%2C2138604%2C1771734083%2C174652%2C76280%2C1768944774%2C1771760408%2C137794%2C9910%2C1769271562%2C1770454888%2C2077237%2C383794%2C1771638197%2C1772001102%2C1769819214%2C1771829247%2C1769962750%2C165990%2C382776%2C1770752283%2C; recent_tags=%E5%8F%A4%E9%A3%8E+%E4%BA%AC%E5%89%A7+; t_sign_auth=1; pnm_cku822=230fCJmZk4PGRVHHxtNZngkZ3k%2BaC52PmgTKQ%3D%3D%7CfyJ6Zyd9OWAma3oraX0obx4%3D%7CfiB4D15%2BZH9geTp%2FJyN8OzVqKw4OEABJWV5aa0I%3D%7CeSRiYjNhIHA2cmI8f281c2Ymfz16OnxrNXNnPHtjJ303ZiBndCB2DQ%3D%3D%7CeCVoaEARTxBTCxxCGh5VDRNMHUZyWVxIB1QDPShqfWxzOBU8%7CeyR8C0gHRQBBBxJHHwlJDBNWA10DRQkDVRMGWAAbXgUqHg%3D%3D%7CeiJmeiV2KHMvangudmM6eXk%2BAA%3D%3D; CNZZDATA921634=cnzz_eid%3D201959541-1389614053-%26ntime%3D1396068742%26cnzz_a%3D4%26sin%3Dnone%26ltime%3D1396068662878%26rtime%3D27; CNZZDATA2629111=cnzz_eid%3D750791331-1389614053-%26ntime%3D1396068742%26cnzz_a%3D4%26sin%3Dnone%26ltime%3D1396068663041%26rtime%3D21; __utma=251084815.1212903984.1389614024.1395994650.1396068663.52; __utmb=251084815.5.10.1396068663; __utmc=251084815; __utmz=251084815.1395897757.48.16.utmcsr=360.fm|utmccn=(referral)|utmcmd=referral|utmcct=/; _xiamitoken=3216f18932e945795bcb9432cd73e95c; sec=53365782f56d4b2a278642bb478b55a2aba36493");
-        downloadheaders.put("Referer", "http://alisec.xiami.com/checkcodev3.php?apply=xiami&http_referer=http://www.xiami.com/song/playlist/id/2073841/object_name/default/object_id/0?t=1396070081856");
-        downloadheaders.put("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36");
+        downloadheaders
+                .put("Referer",
+                        "http://alisec.xiami.com/checkcodev3.php?apply=xiami&http_referer=http://www.xiami.com/song/playlist/id/2073841/object_name/default/object_id/0?t=1396070081856");
+        downloadheaders
+                .put("User-Agent",
+                        "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36");
     }
 
     final String path = "/home/data/xiami/";
@@ -78,6 +85,8 @@ public class XiamiSpider {
     int start = 1;
     int end = 1;
 
+    int skipArtist = 0;
+    
     BaiduBCS baiduBCS = null;
 
     public XiamiSpider(int start2, int end2) {
@@ -101,6 +110,9 @@ public class XiamiSpider {
         }
 
         XiamiSpider sp = new XiamiSpider(start, end);
+        if (args.length > 2){
+            sp.skipArtist = Integer.parseInt(args[2]);
+        }
         sp.start();
 
         // System.out
@@ -190,7 +202,7 @@ public class XiamiSpider {
                                 // 不抓歌曲页面啦，下面xml信息好全啊
                                 String mp3XmlUrl = "http://www.xiami.com/song/playlist/id/" + songid
                                         + "/object_name/default/object_id/0?t=" + System.currentTimeMillis();
-                                
+
                                 logger.info("songhot > 10000 ,get song xml :  " + mp3XmlUrl);
 
                                 String mp3XmlStr = Util.getHttpResponseString(mp3XmlUrl, "get", null, mp3headers);
@@ -232,10 +244,11 @@ public class XiamiSpider {
                                     String surl = track.element("location").getTextTrim();
                                     String url = decodeXiamiUrl(surl);
                                     song.setXiamiDownloadUrl(url);
-                                    logger.info("start download mp3 {}" , url);
+                                    logger.info("start download mp3 {}", url);
                                     if (StringUtils.isNotBlank(url)) {
-                                        String filename = song.getXiamiSongName() + " - " + song.getXiamiArtist() + ".mp3";
-
+                                        String filename = song.getXiamiSongName() + " - " + song.getXiamiArtist()
+                                                + ".mp3";
+                                        filename = filename.replace('/', '_');
                                         File localMp3 = new File(mp3Path + filename);
                                         if (!localMp3.exists()) {
                                             boolean downRst = Util.download(url, mp3headers, localMp3);
@@ -248,17 +261,23 @@ public class XiamiSpider {
                                             } else {
                                                 logger.error("download fail " + url);
                                             }
+                                        } else {
+                                            logger.info("already exist, set directly file : " + mp3Path + filename);
+                                            song.setFileName(mp3Path + filename);
+                                            song.setPcsFileName(filename);
                                         }
+                                    }else {
+                                        logger.error("down load url is null " + mp3XmlStr);
                                     }
 
-                                }else {
+                                } else {
 
                                     logger.error("xml have no track " + mp3XmlStr);
                                 }
-                                
-                                long sleep  = System.currentTimeMillis() - t1;
-                                if (sleep < 10000){
-                                    logger.error("sleep for  " + (10000 - sleep));
+
+                                long sleep = System.currentTimeMillis() - t1;
+                                if (sleep < 10000) {
+                                    logger.info("sleep for  " + (10000 - sleep));
                                     try {
                                         Thread.sleep(10000 - sleep);
                                     } catch (InterruptedException e) {
