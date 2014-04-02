@@ -11,7 +11,6 @@ import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -20,6 +19,7 @@ import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.Args;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,15 +62,19 @@ public class PcsUploader {
         } catch (UnsupportedEncodingException e) {
         }
         StringBuilder urlbu = new StringBuilder();
-        urlbu.append("https://pcs.baidu.com/rest/2.0/pcs/file").append("?method=upload").append("&path=")
-                .append(path).append("&access_token=").append(token).append("&ondup=overwrite");
+        urlbu.append("https://pcs.baidu.com/rest/2.0/pcs/file").append("?method=upload").append("&path=").append(path)
+                .append("&access_token=").append(token).append("&ondup=overwrite");
         System.out.println(urlbu);
         doUpload(urlbu.toString(), file, filename, null);
     }
 
     public static void main(String[] args) throws Exception {
-        // D:\\baiduyundownload\\current_music\\getlucky.mp3
-        new PcsUploader().upload("get lucky.mp3", new File("D:\\soundmanagerv297a-20131201.zip"));
+        new PcsUploader().upload("get lucky - ( daft punk).mp3", new File("D:\\almostlover.mp3"));
+        // HttpEntity entity = new PcsUploadEntity(new File("D:\\test.txt"),
+        // "getlucky.mp3");
+        // entity.writeTo(new FileOutputStream("D:\\test1.txt"));
+        // System.out.println(entity.getContentLength());
+
     }
 
     private String doUpload(String url, File f, String filename, Map<String, String> header) {
@@ -133,8 +137,18 @@ public class PcsUploader {
         }
 
         public void writeTo(OutputStream outstream) throws IOException {
-            IOUtils.copy(pis, outstream);
-            pis.close();
+            Args.notNull(outstream, "Output stream");
+            try {
+                final byte[] tmp = new byte[OUTPUT_BUFFER_SIZE];
+                int l;
+                while ((l = pis.read(tmp)) != -1) {
+                    System.out.println(l);
+                    outstream.write(tmp, 0, l);
+                }
+                outstream.flush();
+            } finally {
+                pis.close();
+            }
         }
 
         public boolean isStreaming() {
@@ -158,18 +172,18 @@ public class PcsUploader {
 
         PcsInputStream(File f, String filename) throws FileNotFoundException {
             fis = new FileInputStream(f);
-            boundary = Util.md5Encoding(System.currentTimeMillis() + "");
+            boundary = "------" + Util.md5Encoding(System.currentTimeMillis() + "");
             StringBuilder sb = new StringBuilder();
             sb.append("--").append(boundary).append("\r\n");
             sb.append("Content-Disposition: form-data; name=\"file\"; filename=\"").append(filename).append("\"\r\n");
-            sb.append("Content-Type: application/octet-stream\r\n\r\n");
+            sb.append("Content-Type: audio/mp3\r\n\r\n");
             try {
                 prefix = sb.toString().getBytes("UTF-8");
             } catch (UnsupportedEncodingException e) {
                 prefix = sb.toString().getBytes();
             }
             sb = new StringBuilder();
-            sb.append("\r\n").append("--").append(boundary).append("\r\n");
+            sb.append("\r\n").append("--").append(boundary).append("--\r\n");
             try {
                 suffix = sb.toString().getBytes("UTF-8");
             } catch (UnsupportedEncodingException e) {
@@ -179,6 +193,7 @@ public class PcsUploader {
             length = prefix.length + f.length() + suffix.length;
         }
 
+        // 不用这个
         @Override
         public int read() throws IOException {
             if (status == 0) {
@@ -197,18 +212,67 @@ public class PcsUploader {
                     if (readLen == -1) {
                         index = 0;
                         status = 2;
-                    } else{
-                        return buff[index++];
+                    } else {
+                        int s = 0xFF & buff[index++]; // byte需要按位扩展成int
+                        return s;
                     }
                 } else {
-                    return buff[index++];
+                    int s = 0xFF & buff[index++];
+                    return s;
                 }
             }
 
             if (status == 2) {
                 if (index < suffix.length) {
-                    System.out.println(" -4- ");
                     return suffix[index++];
+                } else {
+                    status = 3;
+                }
+            }
+
+            return -1;
+        }
+
+        public int read(byte b[], int off, int len) throws IOException {
+            System.out.println("----------------------------");
+            if (status == 0) {
+                int tar = index + len;
+                if (tar <= prefix.length) {
+                    index += len;
+                    System.arraycopy(prefix, index, b, off, len);
+                    return len;
+                } else {
+                    int remain = prefix.length - index;
+                    System.arraycopy(prefix, index, b, off, remain);
+                    status = 1;
+                    index = 0;
+                    return remain; // do not coninue to read file for convince
+                                   // :)
+                }
+            }
+
+            if (status == 1) {
+                readLen = fis.read(b, off, len);
+                if (readLen == -1) {
+                    index = 0;
+                    status = 2;
+                } else {
+                    return readLen;
+                }
+            }
+
+            if (status == 2) {
+                int tar = index + len;
+                if (tar <= prefix.length) {
+                    index += len;
+                    System.arraycopy(prefix, index, b, off, len);
+                    index += len;
+                    return len;
+                } else {
+                    int remain = prefix.length - index;
+                    System.arraycopy(prefix, index, b, off, remain);
+                    status = 3;
+                    return remain;
                 }
             }
 
