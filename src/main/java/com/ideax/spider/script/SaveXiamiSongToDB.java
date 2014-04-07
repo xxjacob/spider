@@ -110,6 +110,8 @@ public class SaveXiamiSongToDB {
             if (StringUtils.isNotBlank(song.getXiamiLyricUrl())) {
                 String lrc = Util.getHttpResponseString(song.getXiamiLyricUrl(), null);
                 song_pstmt.setString(8, StringUtils.isBlank(lrc) ? "" : lrc);
+            }else{
+            	song_pstmt.setString(8, "");
             }
             song_pstmt.setInt(9, now);
             song_pstmt.setInt(10, now);
