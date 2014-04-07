@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PcsUploader {
 
-    Logger logger = LoggerFactory.getLogger(Util.class);
+    static Logger logger = LoggerFactory.getLogger(PcsUploader.class);
 
     String token = "21.295c30d2cd96a2623cb4a0e0b63181b4.2592000.1398915791.3456334463-1038428";
 
@@ -40,7 +40,9 @@ public class PcsUploader {
 
     CloseableHttpClient httpclient;
 
-    public PcsUploader() {
+    public PcsUploader(String token, String bucket) {
+        this.token = token;
+        this.bucket = bucket;
         httpclient = HttpClients
                 .custom()
                 // disable reuse
@@ -50,6 +52,7 @@ public class PcsUploader {
                         "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36")
                 // disable cookie
                 .disableCookieManagement()
+                .disableAutomaticRetries()
                 // .disableRedirectHandling()
                 // socket config, 10s read timeout
                 .setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(600000).build()).build();
@@ -64,17 +67,7 @@ public class PcsUploader {
         StringBuilder urlbu = new StringBuilder();
         urlbu.append("https://pcs.baidu.com/rest/2.0/pcs/file").append("?method=upload").append("&path=").append(path)
                 .append("&access_token=").append(token).append("&ondup=overwrite");
-        System.out.println(urlbu);
         doUpload(urlbu.toString(), file, filename, null);
-    }
-
-    public static void main(String[] args) throws Exception {
-        new PcsUploader().upload("get lucky - ( daft punk).mp3", new File("D:\\almostlover.mp3"));
-        // HttpEntity entity = new PcsUploadEntity(new File("D:\\test.txt"),
-        // "getlucky.mp3");
-        // entity.writeTo(new FileOutputStream("D:\\test1.txt"));
-        // System.out.println(entity.getContentLength());
-
     }
 
     private String doUpload(String url, File f, String filename, Map<String, String> header) {
@@ -135,14 +128,15 @@ public class PcsUploader {
         public InputStream getContent() throws IOException, IllegalStateException {
             return pis;
         }
-
+        int total = 0;
         public void writeTo(OutputStream outstream) throws IOException {
             Args.notNull(outstream, "Output stream");
             try {
                 final byte[] tmp = new byte[OUTPUT_BUFFER_SIZE];
                 int l;
                 while ((l = pis.read(tmp)) != -1) {
-                    System.out.println(l);
+                    total += l;
+                    System.out.println(total+ "/"+ pis.length);
                     outstream.write(tmp, 0, l);
                 }
                 outstream.flush();
@@ -234,7 +228,6 @@ public class PcsUploader {
         }
 
         public int read(byte b[], int off, int len) throws IOException {
-            System.out.println("----------------------------");
             if (status == 0) {
                 int tar = index + len;
                 if (tar <= prefix.length) {
@@ -246,7 +239,8 @@ public class PcsUploader {
                     System.arraycopy(prefix, index, b, off, remain);
                     status = 1;
                     index = 0;
-                    return remain; // do not coninue to read file for convince
+                    return remain; // do not coninue to read file for
+                                   // convenience
                                    // :)
                 }
             }
@@ -263,14 +257,14 @@ public class PcsUploader {
 
             if (status == 2) {
                 int tar = index + len;
-                if (tar <= prefix.length) {
+                if (tar <= suffix.length) {
                     index += len;
-                    System.arraycopy(prefix, index, b, off, len);
+                    System.arraycopy(suffix, index, b, off, len);
                     index += len;
                     return len;
                 } else {
-                    int remain = prefix.length - index;
-                    System.arraycopy(prefix, index, b, off, remain);
+                    int remain = suffix.length - index;
+                    System.arraycopy(suffix, index, b, off, remain);
                     status = 3;
                     return remain;
                 }
